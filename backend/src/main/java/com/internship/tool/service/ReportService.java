@@ -6,7 +6,8 @@ import com.internship.tool.exception.ResourceNotFoundException;
 import com.internship.tool.repository.ReportRepository;
 import com.internship.tool.dto.ReportRequest;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @Service
@@ -54,5 +55,8 @@ public class ReportService {
                 (report.getScore() < 0 || report.getScore() > 100)) {
             throw new BadRequestException("Score must be between 0 and 100");
         }
+    }
+    public Page<Report> getAllPaginated(Pageable pageable) {
+        return reportRepository.findAll(pageable);
     }
 }
