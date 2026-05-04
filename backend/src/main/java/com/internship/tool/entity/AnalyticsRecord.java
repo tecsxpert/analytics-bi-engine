@@ -1,8 +1,10 @@
 package com.internship.tool.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 @Table(name = "analytics_records")
 public class AnalyticsRecord {
@@ -21,6 +23,4 @@ public class AnalyticsRecord {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    // Getters and Setters
 }
