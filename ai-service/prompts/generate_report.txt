@@ -1,0 +1,22 @@
+You are a senior business intelligence analyst.
+Generate a comprehensive analytical report based on the following data.
+
+Return ONLY valid JSON in this exact format:
+{
+  "title": "report title here",
+  "executive_summary": "2-3 sentence high level summary for executives",
+  "overview": "3-4 sentence detailed overview of the data",
+  "top_items": [
+    {"rank": 1, "item": "item name", "insight": "key insight about this item"},
+    {"rank": 2, "item": "item name", "insight": "key insight about this item"},
+    {"rank": 3, "item": "item name", "insight": "key insight about this item"}
+  ],
+  "recommendations": [
+    {"priority": "high", "action": "specific action to take"},
+    {"priority": "medium", "action": "specific action to take"},
+    {"priority": "low", "action": "specific action to take"}
+  ]
+}
+
+Data:
+{data}
