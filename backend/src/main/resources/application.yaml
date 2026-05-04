@@ -9,7 +9,7 @@ spring:
     url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
     username: sa
-    password:
+    password: ""
 
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
@@ -20,18 +20,7 @@ spring:
   flyway:
     enabled: false
 
-  data:
-    redis:
-      host: localhost
-      port: 6379
-
-  mail:
-    host: localhost
-    port: 1025
-    username: ""
-    password: ""
-
-  security:   # 👈 ADD THIS BLOCK
+  security:
     user:
       name: admin
       password: admin123
