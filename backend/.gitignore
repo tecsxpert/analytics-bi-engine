@@ -34,3 +34,5 @@ build/
 .env
 .idea/workspace.xml
 *.log
+
+.idea/
