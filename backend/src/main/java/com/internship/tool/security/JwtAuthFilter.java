@@ -24,6 +24,14 @@ public class JwtAuthFilter extends GenericFilter {
 
         HttpServletRequest req = (HttpServletRequest) request;
 
+        String path = req.getServletPath();
+
+        // ✅ IMPORTANT: Skip JWT check for auth endpoints
+        if (path.startsWith("/auth")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         String authHeader = req.getHeader("Authorization");
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
