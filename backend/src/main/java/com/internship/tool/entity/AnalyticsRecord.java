@@ -36,4 +36,6 @@ public class AnalyticsRecord {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+    @Enumerated(EnumType.STRING)
+private Role role;
 }

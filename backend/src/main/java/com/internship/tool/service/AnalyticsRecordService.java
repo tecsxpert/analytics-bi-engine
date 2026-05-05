@@ -1,7 +1,9 @@
 package com.internship.tool.service;
 
 import com.internship.tool.entity.AnalyticsRecord;
+import com.internship.tool.entity.Role;  // ✅ IMPORTANT
 import com.internship.tool.repository.AnalyticsRecordRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,17 +24,22 @@ public class AnalyticsRecordService {
         return repository.search(keyword, pageable);
     }
 
-    // 🔹 Save
+    // 🔹 Save (FIXED)
     public AnalyticsRecord save(AnalyticsRecord record) {
+
+        if (record.getRole() == null) {
+            record.setRole(Role.VIEWER); // default role
+        }
+
         return repository.save(record);
     }
 
-    // 🔹 Get all with pagination
+    // 🔹 Get all
     public Page<AnalyticsRecord> getAll(Pageable pageable) {
         return repository.findAll(pageable);
     }
 
-    // 🔹 Filter by status
+    // 🔹 Filter
     public Page<AnalyticsRecord> filterByStatus(String status, Pageable pageable) {
         return repository.findByStatus(status, pageable);
     }
@@ -45,7 +52,7 @@ public class AnalyticsRecordService {
         );
     }
 
-    // 🔹 Stats (optimized)
+    // 🔹 Stats
     public Map<String, Object> getStats() {
         Map<String, Object> stats = new HashMap<>();
 
@@ -60,7 +67,7 @@ public class AnalyticsRecordService {
         return stats;
     }
 
-    // 🔹 Combined API
+    // 🔹 Combined
     public Page<AnalyticsRecord> getFilteredData(String status, String search, Pageable pageable) {
 
         if (status != null && search != null) {
