@@ -1,10 +1,12 @@
 package com.internship.tool.service;
 
 import com.internship.tool.entity.AnalyticsRecord;
-import com.internship.tool.entity.Role;  // ✅ IMPORTANT
+import com.internship.tool.entity.Role;
 import com.internship.tool.repository.AnalyticsRecordRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,32 +21,35 @@ public class AnalyticsRecordService {
     @Autowired
     private AnalyticsRecordRepository repository;
 
-    // 🔹 Search
+
+    @Cacheable(value = "analytics_search", key = "#keyword")
     public Page<AnalyticsRecord> search(String keyword, Pageable pageable) {
+        System.out.println("Fetching search results from DB...");
         return repository.search(keyword, pageable);
     }
 
-    // 🔹 Save (FIXED)
+
+    @CacheEvict(value = {"analytics_search", "analytics_stats"}, allEntries = true)
     public AnalyticsRecord save(AnalyticsRecord record) {
 
         if (record.getRole() == null) {
-            record.setRole(Role.VIEWER); // default role
+            record.setRole(Role.VIEWER);
         }
 
         return repository.save(record);
     }
 
-    // 🔹 Get all
+
     public Page<AnalyticsRecord> getAll(Pageable pageable) {
         return repository.findAll(pageable);
     }
 
-    // 🔹 Filter
+
     public Page<AnalyticsRecord> filterByStatus(String status, Pageable pageable) {
         return repository.findByStatus(status, pageable);
     }
 
-    // 🔹 Date range
+
     public List<AnalyticsRecord> getByDateRange(String start, String end) {
         return repository.findByDateRange(
                 LocalDateTime.parse(start),
@@ -52,8 +57,11 @@ public class AnalyticsRecordService {
         );
     }
 
-    // 🔹 Stats
+
+    @Cacheable("analytics_stats")
     public Map<String, Object> getStats() {
+        System.out.println("Fetching stats from DB...");
+
         Map<String, Object> stats = new HashMap<>();
 
         long total = repository.count();
@@ -67,7 +75,7 @@ public class AnalyticsRecordService {
         return stats;
     }
 
-    // 🔹 Combined
+    // 🔹 Combined filter
     public Page<AnalyticsRecord> getFilteredData(String status, String search, Pageable pageable) {
 
         if (status != null && search != null) {
