@@ -1,11 +1,24 @@
-from services.chroma_client import embed_and_store, query_similar, doc_count
+import pytest
+from services.chroma_service import ChromaService
 
-embed_and_store("test-1", "Revenue grew 12% in APAC due to new enterprise clients.")
-embed_and_store("test-2", "Customer churn dropped after loyalty programme launch.")
-embed_and_store("test-3", "Inventory turnover improved with demand forecasting model.")
 
-results = query_similar("revenue growth Asia")
-print("Query results:", results)
-print("Total docs:", doc_count())
-assert len(results) > 0, "ChromaDB query returned nothing!"
-print("ChromaDB test PASSED")
+def test_embed_and_query_returns_correct_result():
+    collection_name = "test_collection"
+    service = ChromaService(collection_name=collection_name)
+    service.clear()
+
+    docs = [
+        "Python is a high-level programming language.",
+        "JavaScript is used for web development.",
+        "Docker is a containerization platform.",
+    ]
+    service.add_documents(docs, ["py", "js", "dock"])
+
+    query = "What is Python?"
+    results = service.query(query, n_results=1)
+
+    assert results is not None
+    assert len(results["ids"]) > 0
+    assert "py" in results["ids"][0]
+
+    service.clear()

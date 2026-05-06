@@ -1,15 +1,16 @@
-from services.groq_client import call_groq
+import os
+from dotenv import load_dotenv
 
-prompt_template = open("prompts/describe.txt").read()
-print("Prompt template loaded:")
-print(prompt_template)
-print("---")
+load_dotenv()
 
-item = "Q1 2026 revenue: $2.3M, up 12% YoY, APAC region"
-prompt = prompt_template.replace("{item}", item)
-print("Final prompt:")
-print(prompt)
-print("---")
+from groq import Groq
 
-result = call_groq(prompt)
-print("Result:", result)
+client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+
+chat_completion = client.chat.completions.create(
+    model="llama-3.3-70b-versatile",
+    messages=[{"role": "user", "content": "Hello! Just testing the Groq API."}],
+    temperature=0.7,
+)
+
+print(f"Success! Response: {chat_completion.choices[0].message.content}")
