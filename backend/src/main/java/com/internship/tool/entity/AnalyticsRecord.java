@@ -4,7 +4,7 @@ import lombok.Data;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-@Data   // 🔥 THIS WAS MISSING
+@Data
 @Entity
 @Table(name = "analytics_records")
 public class AnalyticsRecord {
@@ -18,11 +18,21 @@ public class AnalyticsRecord {
     private String status;
     private Integer score;
 
+    @Column(name = "due_date")
+    private LocalDateTime dueDate;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    // 🔥 NEW FIELD (IMPORTANT)
+    @Column(name = "email_sent")
+    private boolean emailSent = false;
 
     // 🔥 AUTO SET BEFORE INSERT
     @PrePersist
@@ -36,6 +46,4 @@ public class AnalyticsRecord {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
-    @Enumerated(EnumType.STRING)
-private Role role;
 }

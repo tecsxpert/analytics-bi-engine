@@ -7,17 +7,17 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableMethodSecurity   // 🔥 IMPORTANT
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .anyRequest().authenticated()
-            )
-            .httpBasic(); // simple auth for now
+                .anyRequest().permitAll()   // ✅ allow all APIs
+            );
 
         return http.build();
     }

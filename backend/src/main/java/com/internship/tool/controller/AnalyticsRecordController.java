@@ -35,14 +35,14 @@ public class AnalyticsRecordController {
     }
 
     // ➕ CREATE → ADMIN & MANAGER
-    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    //@PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     @PostMapping("/create")
     public AnalyticsRecord create(@RequestBody AnalyticsRecord record) {
         return service.save(record);
     }
 
     // 📄 GET ALL → all roles
-    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','VIEWER')")
+    //@PreAuthorize("hasAnyRole('ADMIN','MANAGER','VIEWER')")
     @GetMapping("/all")
     public Page<AnalyticsRecord> getAll(Pageable pageable) {
         return service.getAll(pageable);
