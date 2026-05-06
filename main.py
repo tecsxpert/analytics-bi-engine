@@ -1,7 +1,11 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, BackgroundTasks
 from pydantic import BaseModel
 from dotenv import load_dotenv
 import time
+import uuid
+import urllib.request
+import json
+
 from services.groq_client import GroqClient
 from services.chroma_service import ChromaService
 from services.redis_service import RedisCache
@@ -12,6 +16,7 @@ app = FastAPI()
 
 START_TIME = time.time()
 response_times = []
+jobs = {}
 
 groq_client = GroqClient()
 chroma_service = ChromaService()
@@ -39,6 +44,9 @@ class CategoriseRequest(BaseModel):
 class QueryRequest(BaseModel):
     question: str
 
+class ReportRequest(BaseModel):
+    topic: str
+    webhook_url: str = None
 
 @app.post("/categorise")
 def categorise(request: CategoriseRequest):
@@ -82,13 +90,14 @@ Respond with ONLY a JSON object in this exact format (no other text):
     if "category" not in result:
         raise HTTPException(status_code=500, detail="Invalid response from API")
 
-    category = result["category"]
-    if category not in CATEGORIES:
+    category = result.get("category", "unknown")
+    if category not in CATEGORIES and category != "unknown":
         category = "unknown"
         
     confidence = float(result.get("confidence", 0.0))
     meta["confidence"] = confidence
     meta["cached"] = False
+    meta["is_fallback"] = meta.get("is_fallback", False)
 
     response = {
         "category": category,
@@ -156,7 +165,8 @@ def query(request: QueryRequest):
     answer = result.get("content", result) if isinstance(result, dict) else result
     
     meta["cached"] = False
-    meta["confidence"] = 0.95 # Generic confidence for generation
+    meta["is_fallback"] = meta.get("is_fallback", False)
+    meta["confidence"] = 0.95 if not meta.get("is_fallback") else 0.0
     
     response = {
         "answer": answer, 
@@ -190,6 +200,57 @@ def health():
         "chromadb_doc_count": doc_count,
         "cache_stats": redis_cache.get_stats()
     }
+
+def process_report(job_id: str, topic: str, webhook_url: str):
+    try:
+        prompt = [
+            {"role": "system", "content": "You are a report generator. Generate a comprehensive report on the given topic."},
+            {"role": "user", "content": f"Topic: {topic}"}
+        ]
+        
+        result_raw = groq_client.call(prompt, temperature=0.5)
+        result = result_raw["data"]
+        meta = result_raw["metadata"]
+        
+        answer = result.get("content", result) if isinstance(result, dict) else result
+        meta["cached"] = False
+        meta["is_fallback"] = meta.get("is_fallback", False)
+        
+        jobs[job_id] = {
+            "status": "completed",
+            "report": answer,
+            "meta": meta
+        }
+        
+        if webhook_url:
+            try:
+                req = urllib.request.Request(
+                    webhook_url, 
+                    data=json.dumps(jobs[job_id]).encode('utf-8'), 
+                    headers={'Content-Type': 'application/json'}
+                )
+                urllib.request.urlopen(req, timeout=5)
+            except Exception as e:
+                print(f"Webhook failed: {e}")
+                
+    except Exception as e:
+        jobs[job_id] = {
+            "status": "failed",
+            "error": str(e)
+        }
+
+@app.post("/generate-report")
+def generate_report(request: ReportRequest, background_tasks: BackgroundTasks):
+    job_id = str(uuid.uuid4())
+    jobs[job_id] = {"status": "processing"}
+    background_tasks.add_task(process_report, job_id, request.topic, request.webhook_url)
+    return {"job_id": job_id, "status": "processing"}
+
+@app.get("/report/{job_id}")
+def get_report(job_id: str):
+    if job_id not in jobs:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return jobs[job_id]
 
 
 if __name__ == "__main__":

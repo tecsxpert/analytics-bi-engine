@@ -62,7 +62,21 @@ class GroqClient:
                     time.sleep(backoff)
                     backoff *= 2
 
-        raise last_exception
+        logger.error(f"API call failed after all retries: {last_exception}")
+        return {
+            "data": {
+                "category": "unknown", 
+                "confidence": 0.0, 
+                "reasoning": "Fallback response due to AI service error.", 
+                "content": "I apologize, but I am currently experiencing high latency. Here is a fallback response. Please try again later."
+            },
+            "metadata": {
+                "tokens_used": 0,
+                "response_time_ms": 0,
+                "model_used": self.model,
+                "is_fallback": True
+            }
+        }
 
     def call_with_json_response(
         self,
