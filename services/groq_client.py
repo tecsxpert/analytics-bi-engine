@@ -28,19 +28,31 @@ class GroqClient:
 
         for attempt in range(max_retries):
             try:
+                start_time = time.time()
                 response = self.client.chat.completions.create(
                     model=self.model,
                     messages=messages,
                     temperature=temperature,
                 )
+                end_time = time.time()
+                
                 content = response.choices[0].message.content
+                tokens_used = response.usage.total_tokens if response.usage else 0
+                response_time_ms = int((end_time - start_time) * 1000)
+                
+                metadata = {
+                    "tokens_used": tokens_used,
+                    "response_time_ms": response_time_ms,
+                    "model_used": self.model
+                }
+                
                 try:
                     parsed = json.loads(content)
                     logger.info(f"API call successful on attempt {attempt + 1}")
-                    return parsed
+                    return {"data": parsed, "metadata": metadata}
                 except json.JSONDecodeError:
                     logger.warning("Response is not valid JSON, returning raw content")
-                    return {"content": content}
+                    return {"data": {"content": content}, "metadata": metadata}
 
             except Exception as e:
                 last_exception = e
