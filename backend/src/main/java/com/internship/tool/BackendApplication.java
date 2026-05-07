@@ -2,8 +2,10 @@ package com.internship.tool;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.internship.tool")  // ✅ HERE
+@EnableScheduling
 public class BackendApplication {
 
     public static void main(String[] args) {
