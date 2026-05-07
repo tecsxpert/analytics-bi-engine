@@ -34,6 +34,15 @@ public class AnalyticsRecord {
     @Column(name = "email_sent")
     private boolean emailSent = false;
 
+
+public Boolean getEmailSent() {
+    return emailSent;
+}
+
+public void setEmailSent(Boolean emailSent) {
+    this.emailSent = emailSent;
+}
+
     // 🔥 AUTO SET BEFORE INSERT
     @PrePersist
     protected void onCreate() {

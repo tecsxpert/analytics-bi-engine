@@ -2,12 +2,11 @@ package com.internship.tool.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean
@@ -15,8 +14,14 @@ public class SecurityConfig {
 
         http
             .csrf(csrf -> csrf.disable())
+
+            .headers(headers ->
+                headers.frameOptions(frame -> frame.disable())
+            )
+
             .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll()   // ✅ allow all APIs
+                .requestMatchers("/h2-console/**").permitAll()
+                .anyRequest().permitAll()
             );
 
         return http.build();
