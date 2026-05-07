@@ -1,0 +1,1 @@
+ALTER TABLE analytics_records ADD COLUMN email_sent BOOLEAN DEFAULT FALSE;
