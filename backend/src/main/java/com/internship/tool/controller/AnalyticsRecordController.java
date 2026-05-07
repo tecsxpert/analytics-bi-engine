@@ -42,14 +42,20 @@ public class AnalyticsRecordController {
 
         return service.getStats();
     }
+// CREATE
+@PostMapping("/create")
+public AnalyticsRecord create(@RequestBody AnalyticsRecord record) {
+    return service.save(record);
+}
 
-    // ➕ CREATE → ADMIN & MANAGER
-    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
-    @PostMapping("/create")
-    public AnalyticsRecord create(@RequestBody AnalyticsRecord record) {
+// PUT THIS BELOW CREATE METHOD
 
-        return service.save(record);
-    }
+// UPDATE
+@PutMapping("/update")
+public AnalyticsRecord update(@RequestBody AnalyticsRecord record) {
+
+    return service.save(record);
+}
 
     // 📄 GET ALL → all roles
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','VIEWER')")

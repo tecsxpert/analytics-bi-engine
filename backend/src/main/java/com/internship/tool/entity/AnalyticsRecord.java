@@ -55,4 +55,8 @@ public void setEmailSent(Boolean emailSent) {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+    public void setId(Long id) {
+    this.id = id;
+}
 }
