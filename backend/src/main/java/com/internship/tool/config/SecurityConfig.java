@@ -28,7 +28,9 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/test-email","/upload").permitAll()
+                        .requestMatchers("/test-email","/upload","/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html").permitAll()
                         .requestMatchers("/auth/**","/files/**").permitAll()
                         .anyRequest().authenticated()
                 )
