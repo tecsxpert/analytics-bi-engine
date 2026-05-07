@@ -1,0 +1,1 @@
+ALTER TABLE analytics_records ADD COLUMN due_date TIMESTAMP;

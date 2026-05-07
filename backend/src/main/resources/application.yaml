@@ -2,6 +2,14 @@ server:
   port: 8080
 
 spring:
+ jd2-day12
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+  jpa:
+
   application:
     name: analytics-bi-engine
 
@@ -13,12 +21,17 @@ spring:
 
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+ main
     hibernate:
       ddl-auto: update
     show-sql: true
 
   flyway:
+ jd2-day12
+    enabled: false
+
     enabled: true
+ main
 
   security:
     user:
