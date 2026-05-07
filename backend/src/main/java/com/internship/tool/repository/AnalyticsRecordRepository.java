@@ -27,6 +27,7 @@ public interface AnalyticsRecordRepository extends JpaRepository<AnalyticsRecord
             @Param("keyword") String keyword,
             Pageable pageable
     );
+ jd2-day12
 
     // 🔹 Date range
     @Query("SELECT a FROM AnalyticsRecord a WHERE a.createdAt BETWEEN :start AND :end")
@@ -41,4 +42,13 @@ public interface AnalyticsRecordRepository extends JpaRepository<AnalyticsRecord
     List<AnalyticsRecord> findByDueDateBefore(LocalDateTime now);
 
     List<AnalyticsRecord> findByDueDateBetween(LocalDateTime start, LocalDateTime end);
+
+    @Query("SELECT a FROM AnalyticsRecord a WHERE a.createdAt BETWEEN :start AND :end")
+List<AnalyticsRecord> findByDateRange(
+        @Param("start") LocalDateTime start,
+        @Param("end") LocalDateTime end);
+
+    // 🔹 Stats optimization
+    long countByStatus(String status);
+ main
 }
