@@ -37,3 +37,6 @@ spring:
 jwt:
   secret: test-secret-key
   expiration-ms: 86400000
+
+file:
+  upload-dir: uploads
