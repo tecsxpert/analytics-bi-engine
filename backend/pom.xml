@@ -48,12 +48,14 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
+ jd2-day13
         <!-- AOP -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
+ main
         <!-- H2 DATABASE -->
         <dependency>
             <groupId>com.h2database</groupId>
@@ -81,7 +83,11 @@
             <optional>true</optional>
         </dependency>
 
+ jd2-day13
         <!-- JWT -->
+
+        <!-- JWT (FIXED) -->
+ main
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
@@ -109,6 +115,7 @@
             <scope>test</scope>
         </dependency>
 
+ jd2-day13
         <!-- Testcontainers -->
         <dependency>
             <groupId>org.testcontainers</groupId>
@@ -128,6 +135,7 @@
             <scope>test</scope>
         </dependency>
 
+ main
     </dependencies>
 
     <build>
@@ -135,6 +143,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+ jd2-day13
 
                 <configuration>
                     <mainClass>
@@ -142,6 +151,7 @@
                     </mainClass>
                 </configuration>
 
+ main
             </plugin>
         </plugins>
     </build>
