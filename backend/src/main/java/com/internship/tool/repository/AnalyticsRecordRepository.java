@@ -6,6 +6,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+ jd2-day14
+import org.springframework.data.jpa.repository.Query;
+ main
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,6 +30,25 @@ public interface AnalyticsRecordRepository extends JpaRepository<AnalyticsRecord
             @Param("keyword") String keyword,
             Pageable pageable
     );
+ jd2-day14
+
+    // 🔹 Date range
+    @Query("SELECT a FROM AnalyticsRecord a WHERE a.createdAt BETWEEN :start AND :end")
+    List<AnalyticsRecord> findByDateRange(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end);
+
+    @Query("SELECT a FROM AnalyticsRecord a")
+    List<AnalyticsRecord> findAllOptimized();
+
+    // 🔹 Stats
+    long countByStatus(String status);
+
+    // 🔥 Scheduler optimized queries (ADD THESE)
+    List<AnalyticsRecord> findByDueDateBefore(LocalDateTime now);
+
+    List<AnalyticsRecord> findByDueDateBetween(LocalDateTime start, LocalDateTime end);
+
     @Query("SELECT a FROM AnalyticsRecord a WHERE a.createdAt BETWEEN :start AND :end")
 List<AnalyticsRecord> findByDateRange(
         @Param("start") LocalDateTime start,
@@ -34,4 +56,5 @@ List<AnalyticsRecord> findByDateRange(
 
     // 🔹 Stats optimization
     long countByStatus(String status);
+ main
 }
