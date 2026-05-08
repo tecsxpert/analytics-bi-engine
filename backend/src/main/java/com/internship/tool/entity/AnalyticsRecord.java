@@ -2,11 +2,18 @@ package com.internship.tool.entity;
 
 import lombok.Data;
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "analytics_records")
+@Table(
+    name = "analytics_records",
+    indexes = {
+        @Index(name = "idx_status", columnList = "status"),
+        @Index(name = "idx_title", columnList = "title")
+    }
+)
 public class AnalyticsRecord {
 
     @Id
@@ -30,33 +37,29 @@ public class AnalyticsRecord {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    // 🔥 NEW FIELD (IMPORTANT)
     @Column(name = "email_sent")
     private boolean emailSent = false;
 
+    public boolean getEmailSent() {
+        return emailSent;
+    }
 
-public Boolean getEmailSent() {
-    return emailSent;
-}
+    public void setEmailSent(boolean emailSent) {
+        this.emailSent = emailSent;
+    }
 
-public void setEmailSent(Boolean emailSent) {
-    this.emailSent = emailSent;
-}
-
-    // 🔥 AUTO SET BEFORE INSERT
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 
-    // 🔥 AUTO UPDATE BEFORE UPDATE
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
 
     public void setId(Long id) {
-    this.id = id;
-}
+        this.id = id;
+    }
 }
