@@ -48,6 +48,14 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
+ jd2-day14
+        <!-- AOP -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+ main
         <!-- H2 DATABASE -->
         <dependency>
             <groupId>com.h2database</groupId>
@@ -75,7 +83,9 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- JWT (FIXED) -->
+jd2-day14
+        <!-- JWT -->
+ main
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
@@ -103,6 +113,27 @@
             <scope>test</scope>
         </dependency>
 
+ jd2-day14
+        <!-- Testcontainers -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+ main
     </dependencies>
 
     <build>
@@ -110,6 +141,15 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+ jd2-day14
+
+                <configuration>
+                    <mainClass>
+                        com.internship.tool.BackendApplication
+                    </mainClass>
+                </configuration>
+
+ main
             </plugin>
         </plugins>
     </build>
