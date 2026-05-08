@@ -1,0 +1,14 @@
+You are a senior business intelligence advisor.
+Given the following analytics context, return exactly 3 actionable recommendations.
+
+Return ONLY valid JSON — an array of exactly 3 objects:
+[
+  {
+    "action_type": "investigate | optimise | escalate | monitor",
+    "description": "clear actionable recommendation in 1-2 sentences",
+    "priority": "high | medium | low"
+  }
+]
+
+Context:
+{context}
